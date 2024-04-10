@@ -1,0 +1,49 @@
+namespace cdm.event.workflow.repo.pairoff : <"Workflow concepts (orthogonal to business event): time stamp, credit limit, trade warehouse info and associated function specifications.">
+version "${project.version}"
+
+import cdm.base.staticdata.party.*
+import cdm.base.staticdata.identifier.*
+
+import cdm.event.common.*
+import cdm.base.staticdata.asset.common.*
+import cdm.base.math.*
+import cdm.legaldocumentation.common.*
+
+import cdm.event.workflow.*
+
+
+type PairOffWorkflow extends Workflow:
+        pairoffRequest PairOffRequestWorkflowStep (0..1)
+        pairoffApproval PairOffApprovalWorkflowStep (0..1)
+        pairoffSettlement PairOffSettlementWorkflowStep (0..1)
+
+
+type PairOffRequestWorkflowStep extends WorkflowStep:
+        pairOffRequestInstruction PairOffRequestInstruction (1..1)
+
+
+type PairOffApprovalWorkflowStep extends WorkflowStep:
+        pairOffApprovalInstruction PairOffRequestInstruction (1..1)
+
+type PairOffSettlementWorkflowStep extends WorkflowStep:
+        pairOffSettlementInstruction PairOffRequestInstruction (1..1)
+
+
+type PairOffRequestInstruction:
+    	tradesState TradeState (2..*)
+    	pairoffIdentifier Identifier (1..1)
+    	initiatingParty Party (1..1)
+    	initiatingPartyRole PartyRole (1..1)
+    	counterparty Party (1..1)
+    	counterpartyRole PartyRole (1..1)
+    	netSettlementIdentifier Identifier(1..1)
+    	cashCurrency CurrencyCodeEnum (1..1)
+    	creditAccount Account (1..1)
+    	debitAccount Account (1..1)
+    	netSettlementAmount MeasureBase (1..1)
+    	settlementMessage string(1..1)
+    	legalAgreement LegalAgreement (0..*)
+
+	
+	
+	

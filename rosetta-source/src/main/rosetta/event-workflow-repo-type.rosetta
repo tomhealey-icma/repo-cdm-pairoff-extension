@@ -1,0 +1,48 @@
+namespace cdm.event.workflow.repo.pairoff : <"Workflow concepts (orthogonal to business event): time stamp, credit limit, trade warehouse info and associated function specifications.">
+version "${project.version}"
+
+import cdm.base.staticdata.party.*
+import cdm.base.staticdata.identifier.*
+
+import cdm.event.common.*
+import cdm.base.staticdata.asset.common.*
+import cdm.base.math.*
+import cdm.legaldocumentation.common.*
+
+import cdm.event.workflow.*
+
+//Repo Execution Workflow Model
+type ExecutionWorkflowEvent extends Workflow:
+     executed ExecutedEvent (1..1)
+
+type ExecutedEvent extends WorkflowStep:
+    executed WorkflowStep (1..1)
+    confirmed ConfirmedEvent (0..1)
+
+type ConfirmedEvent extends WorkflowStep:
+    confirmed WorkflowStep (1..1)
+    contractFormed ContractFormedEvent (0..1)
+
+type ContractFormedEvent extends WorkflowStep:
+    contractFormed WorkflowStep (1..1)
+    transfer TransferredEvent (0..1)
+
+type TransferredEvent extends WorkflowStep:
+    transferred WorkflowStep (1..1)
+    terminate TerminateEvent (0..1)
+
+type TerminateEvent extends WorkflowStep:
+    terminate WorkflowStep (1..1)
+	
+	
+type RepoWorkflow extends Workflow:
+	execution RepoExecutionWorkflow (1..1)
+	pairOffRequest PairOffWorkflow (0..*)
+	
+type RepoExecutionWorkflow extends Workflow:
+	execution WorkflowStep (1..1)
+
+
+	
+	
+	

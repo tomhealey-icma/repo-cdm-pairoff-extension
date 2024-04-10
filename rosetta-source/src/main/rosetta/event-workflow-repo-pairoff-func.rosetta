@@ -1,0 +1,45 @@
+namespace cdm.event.workflow.repo.pairoff : <"Workflow concepts (orthogonal to business event): time stamp, credit limit, trade warehouse info and associated function specifications.">
+version "${project.version}"
+
+import cdm.base.staticdata.party.*
+import cdm.base.staticdata.identifier.*
+
+import cdm.event.common.*
+import cdm.base.staticdata.asset.common.*
+import cdm.base.math.*
+
+import cdm.event.workflow.*
+
+
+func ValidatePairOffRequest:
+        inputs:
+            pairOffRequestWorkflowStep PairOffRequestWorkflowStep (1..1)
+            requestDateTime zonedDateTime (1..1)
+            settlementDate zonedDateTime (1..1)
+            cutoffDateTime zonedDateTime (1..1)
+        output:
+           approvedPairOffRequestWorkflowStep PairOffRequestWorkflowStep (1..1)
+
+        set approvedPairOffRequestWorkflowStep: pairOffRequestWorkflowStep
+        set approvedPairOffRequestWorkflowStep -> approval-> approved :
+            if (ValidateCutOffTime(pairOffRequestWorkflowStep->pairOffRequestInstruction, requestDateTime, settlementDate,cutoffDateTime) = True)
+            then
+                True
+            else
+                False
+
+func ValidateCutOffTime:
+        inputs:
+            pairOffRequestInstruction PairOffRequestInstruction (1..1)
+            requestDateTime zonedDateTime (1..1)
+            settlementDate zonedDateTime (1..1)
+            cutoffDateTime zonedDateTime (1..1)
+        output:
+            is_valid boolean (1..1)
+
+        set is_valid:
+            cutoffDateTime < settlementDate
+
+	
+	
+	
